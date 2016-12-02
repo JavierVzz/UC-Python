@@ -15,6 +15,7 @@
 #         - the average size of each word
 
 import os, sys, re
+from matplotlib import pyplot
 
 class textAnalizer():
     """\tTakes as an argument the name of a file and then finds:
@@ -58,10 +59,13 @@ class textAnalizer():
 
 
     def topN(self,n = 5):
+        topList = []
         listHeader = ["Word", "Frequency"]
         print("\n{0:<10}{1:>5}".format(listHeader[0], listHeader[1]))
         for i in range(n):
             print("{0:<10}{1:>9}".format(self.__sortedWordList[i][0], self.__sortedWordList[i][1]))
+            topList.append(self.__sortedWordList[i])
+        return topList
 
     def longestWord(self):
         size = 0
@@ -77,6 +81,19 @@ class textAnalizer():
         for word in self.__sortedWordList:
             size += len(word[0])
         print("Average length of words: {s:.2f}".format(s = size/len(self.__sortedWordList)))
+
+    def barChart(self, topList):
+        names = []
+        values = []
+        for i in range(len(topList)):
+            names.append(topList[i][0])
+            values.append(topList[i][1])
+        xs = [i + 0.1 for i, _ in enumerate(names)]
+        pyplot.bar(xs, values)
+        pyplot.ylabel("Frequency")
+        pyplot.title("Top Five Words")
+        pyplot.xticks([i + 0.5 for i, _ in enumerate(names)], names)
+        pyplot.show()
 
 def main():
     print("Project 1")
@@ -95,10 +112,10 @@ def main():
         print(msg)
 
     words.countWord()
-    words.topN()
+    topList = words.topN()
     words.longestWord()
     words.averageWord()
-
+    words.barChart(topList)
 
 if __name__ == "__main__":
     main()
